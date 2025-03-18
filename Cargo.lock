@@ -1080,7 +1080,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "slipway_jsx_transform"
+name = "slipway_jsx_transpile"
 version = "0.1.0"
 dependencies = [
  "serde",
