@@ -1,0 +1,16 @@
+{
+  "publisher": "slipwayhq",
+  "name": "jsx_transpile",
+  "description": "Transforms JSX strings to JS strings.",
+  "version": "0.0.1",
+  "input": {
+    "properties": {
+      "jsx": { "type": "string" }
+    }
+  },
+  "output": {
+    "properties": {
+      "js": { "type": "string" }
+    }
+  }
+}
