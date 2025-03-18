@@ -18,14 +18,14 @@ impl Guest for Component {
     fn run(input: String) -> Result<String, ComponentError> {
         let input: Input = serde_json::from_str(&input).expect("should parse JSON from stdin");
 
-        let js = jsx_to_js(&input.jsx);
+        let js = jsx_to_js(&input.jsx)?;
         let output = Output { js };
 
         Ok(serde_json::to_string(&output).expect("should serialize output to JSON"))
     }
 }
 
-fn jsx_to_js(jsx_str: &str) -> String {
+fn jsx_to_js(jsx_str: &str) -> Result<String, ComponentError> {
     // Create a SourceMap and load your JSX source.
     let cm = Rc::new(SourceMap::default());
     let fm = cm.new_source_file(
@@ -69,12 +69,14 @@ fn jsx_to_js(jsx_str: &str) -> String {
             comments: None,
             wr: JsWriter::new(cm.clone(), "\n", &mut buf, None),
         };
-        emitter.emit_module(&module).unwrap();
+        emitter.emit_module(&module).map_err(|e| ComponentError {
+            message: "Failed to emit transpiled code.".to_string(),
+            inner: vec![e.to_string()],
+        })?;
     }
 
-    let result = String::from_utf8(buf).unwrap();
-    println!("{}", result);
-    result
+    let result = String::from_utf8(buf).expect("Emitted code should be valid UTF-8");
+    Ok(result)
 }
 
 #[derive(Deserialize)]
@@ -94,7 +96,7 @@ mod tests {
     #[test]
     fn it_should_convert_simple_jsx() {
         let jsx = r#"<h1>Hello World!</h1>"#;
-        let js = jsx_to_js(jsx);
+        let js = jsx_to_js(jsx).unwrap();
         assert_eq!(
             js.trim(),
             r#"React.createElement("h1", null, "Hello World!");"#
