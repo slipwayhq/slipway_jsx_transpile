@@ -42,7 +42,11 @@ fn jsx_to_js(jsx_str: &str) -> Result<String, ComponentError> {
         StringInput::from(&*fm),
         None,
     );
-    let mut module = parser.parse_module().expect("Failed to parse");
+
+    let mut module = parser.parse_module().map_err(|e| ComponentError {
+        message: "Failed to parse JSX.".to_string(),
+        inner: vec![format!("{e:?}")],
+    })?;
 
     let globals = Globals::new();
     let comments = SingleThreadedComments::default();
