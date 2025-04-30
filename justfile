@@ -10,7 +10,7 @@ build configuration="debug": && package
   cd src && cargo build --target wasm32-wasip2 {{ if configuration == "release" { "--release" } else { "" } }}
 
   cp target/wasm32-wasip2/{{configuration}}/slipway_{{name}}.wasm components/{{publisher}}.{{name}}/run.wasm
-  cp slipway_component.json components/{{publisher}}.{{name}}
+  cp src/slipway_component.json components/{{publisher}}.{{name}}
 
 build-ci configuration="debug": (build configuration) && package-ci
 
