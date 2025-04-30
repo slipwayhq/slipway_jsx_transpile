@@ -20,6 +20,9 @@ package:
 package-ci:
   docker run --rm -v "$(pwd)/components":/workspace -w /workspace slipwayhq/slipway:latest slipway package {{publisher}}.{{name}}
 
-
 test: build
   cargo test
+
+release version:
+  git tag -a "{{version}}" -m "Release {{version}}"
+  git push origin "{{version}}"
