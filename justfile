@@ -1,8 +1,9 @@
 publisher := "slipwayhq"
 name := "jsx_transpile"
 
-build configuration="debug": clear-components wit (cargo-build configuration) (assemble configuration) && package
-build-ci: clear-components (cargo-build "release") (assemble "release") && package-ci
+build configuration="debug": clear-components wit && (cargo-build configuration) (assemble configuration) package
+build-ci: clear-components && (cargo-build "release") (assemble "release") package-ci
+  rustup target add wasm32-wasip2
 
 clear-components:
   rm -rf components
