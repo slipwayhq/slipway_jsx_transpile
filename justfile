@@ -1,18 +1,22 @@
 publisher := "slipwayhq"
 name := "jsx_transpile"
 
-build configuration="debug": && package
+build configuration="debug": clear-components wit (cargo-build configuration) (assemble configuration) && package
+build-ci: clear-components (cargo-build "release") (assemble "release") && package-ci
+
+clear-components:
   rm -rf components
   mkdir -p components/{{publisher}}.{{name}}
 
-  slipway wit > wit/slipway.wit
-
+cargo-build configuration="debug":
   cd src && cargo build --target wasm32-wasip2 {{ if configuration == "release" { "--release" } else { "" } }}
 
+assemble configuration="debug":
   cp target/wasm32-wasip2/{{configuration}}/slipway_{{name}}.wasm components/{{publisher}}.{{name}}/run.wasm
   cp src/slipway_component.json components/{{publisher}}.{{name}}
 
-build-ci configuration="debug": (build configuration) && package-ci
+wit:
+  slipway wit > wit/slipway.wit
 
 package:
   slipway package components/{{publisher}}.{{name}}
