@@ -1,4 +1,4 @@
-# `slipwayhq.jsx`
+# `slipwayhq.jsx_transpile`
 
 A [Slipway](https://slipway.co/) Component which takes a [JSX definition](https://og-playground.vercel.app/)
 as an input and returns a transpiled Javascript version of the JSX.
